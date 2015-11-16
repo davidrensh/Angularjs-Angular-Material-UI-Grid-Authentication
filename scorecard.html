@@ -1,0 +1,72 @@
+<md-button class="md-fab md-fab-top-right" aria-label="TopMenu" ng-show="!showtop" ng-click="showtop = !showtop">
+    <md-icon md-svg-icon="img/chevron-left.svg" aria-label="TopMenu"></md-icon>
+</md-button>
+<div layout="column" layout-fill >
+    <div ng-hide="!showtop"  >
+        <md-toolbar class="animate-show md-hue-1 md-whiteframe-z1" ng-show="!showSearch">
+            <div class="md-toolbar-tools">
+                <md-button class="md-icon-button" ng-click="toggleLeft()" aria-label="Menu">
+                    <md-icon aria-label="Menu"></md-icon>
+                </md-button>
+                <h3>
+                    &nbsp;&nbsp;Forman Studio
+                </h3>
+                <span flex></span>
+                <md-button class="md-icon-button" aria-label="Search" ng-click="toggleSearch()">
+                    <md-icon md-svg-icon="action:ic_search_24px" aria-label="Search"></md-icon>
+                </md-button>
+                <md-button class="md-icon-button" aria-label="Open Settings" ng-click="showListBottomSheet($event)">
+                    <md-icon md-svg-icon="navigation:ic_more_vert_24px" aria-label="More"></md-icon>
+                </md-button>
+                <md-button class="md-icon-button" aria-label="Close" ng-click="showtop = !showtop">
+                    <md-icon md-svg-icon="img/close.svg" aria-label="Close"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-toolbar ng-show="showSearch" class="animate-show md-hue-1 md-whiteframe-z1">
+            <div class="md-toolbar-tools">
+                <md-button class="md-icon-button" ng-click="toggleLeft()" aria-label="Menu">
+                    <md-icon aria-label="Menu"></md-icon>
+                </md-button>
+                <md-button class="md-icon-button" ng-click="toggleSearch()" aria-label="Menu">
+                    <md-icon md-svg-icon="navigation:ic_arrow_back_24px" aria-label="Back"></md-icon>
+                </md-button>
+                <h3 role="button" ng-click="toggleSearch()">
+                    Back
+                </h3>
+                <span flex="5"></span>
+                <span ng-controller="SearchCtrl as ctrl" flex>
+                    <md-autocomplete md-theme="input"
+                                     md-input-name="autocompleteField"
+                                     md-no-cache="ctrl.noCache"
+                                     md-selected-item="ctrl.selectedItem"
+                                     md-search-text="ctrl.searchText"
+                                     md-items="item in ctrl.querySearch(ctrl.searchText)"
+                                     md-item-text="item.display"
+                                     placeholder="Search">
+                        <md-item-template>
+                            <span md-highlight-text="ctrl.searchText">{{item.display}}</span>
+                        </md-item-template>
+                        <div ng-messages="searchForm.autocompleteField.$error" ng-if="searchForm.autocompleteField.$touched">
+                            <div ng-message="required">You <b>must</b> have a favorite state.</div>
+                            <div ng-message="minlength">Your entry is not long enough.</div>
+                            <div ng-message="maxlength">Your entry is too long.</div>
+                        </div>
+                    </md-autocomplete>
+                </span>
+
+            </div>
+        </md-toolbar>
+    </div>
+    <md-content layout-fill  >
+        <div layout="column">
+            <div>
+                <button id="refreshButton" type="button" class="btn btn-success" ng-click="refreshData()">Refresh Data</button>  <strong>Calls Pending:</strong> <span ng-bind="callsPending"></span>
+                <br>
+                <br>
+                <strong>{{ myData.length }} rows</strong>
+            </div>
+            <div id="grid1" ui-grid="gridOptions" ui-grid-cellNav ui-grid-edit ui-grid-resize-columns ui-grid-pinning ui-grid-selection ui-grid-move-columns ui-grid-importer ui-grid-exporter ui-grid-grouping class="grid"></div>
+        </div>
+    </md-content>
+</div>

@@ -1,0 +1,61 @@
+    <div layout="row" layout-fill>
+        <md-button class="md-fab md-fab-bottom-right" aria-label="Add" ng-click="showAdd($event)">
+            <md-icon md-svg-icon="content:ic_add_24px" aria-label="Plus"></md-icon>
+        </md-button>
+        <md-button class="md-fab md-fab-top-left" aria-label="Menu" ng-click="toggle()">
+            <md-icon md-svg-icon="img/menu.svg" aria-label="Menu"></md-icon>
+        </md-button>
+
+        <md-sidenav class="md-sidenav-left md-whiteframe-1dp" md-component-id="left"
+                    md-is-locked-open="showside">
+
+            <md-toolbar md-scroll-shrink class="animate-show md-hue-1 md-whiteframe-z1">
+                <div class="md-toolbar-tools">
+                    <h3> Foreman Studio (User: {{username}})</h3>
+                    <span flex></span>
+                    <md-button class="md-icon-button" aria-label="Close" ng-click="showtop = !showtop">
+                        <md-icon md-svg-icon="img/close.svg" aria-label="Close" ng-click="close()"></md-icon>
+                    </md-button>
+
+                </div>
+            </md-toolbar>
+            <md-content role="navigation">
+                <md-input-container>
+                    <label>Project</label>
+                    <md-select ng-model="userProject">
+                        <md-option ng-repeat="p in vm.projects" value="{{p.abbrev}}">
+                            {{p.abbrev}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>Scorecard</label>
+                    <md-select ng-model="userScorecard">
+                        <md-option ng-repeat="p in vm.scorecards" value="{{p.abbrev}}">
+                            {{p.abbrev}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+
+            </md-content>
+            <md-content role="navigation">
+                <h5></h5>
+                <ul class="side-menu">
+                    <li ng-repeat="section in vm.menu.sections" class="parent-list-item"
+                        ng-class="{'parentActive' : vm.isSectionSelected(section)}">
+                        <h2 class="menu-heading" ng-if="section.type === 'heading'"
+                            id="heading_{{ section.name | nospace }}">
+                            {{section}}
+                        </h2>
+                        <menu-link section="section" ng-if="section.type === 'link'"></menu-link>
+                        <menu-toggle section="section" ng-if="section.type === 'toggle'"></menu-toggle>
+                    </li>
+                </ul>
+            </md-content>
+        </md-sidenav>
+
+        <md-content layout layout-fill >
+            <ui-view name="content" layout-fill ></ui-view>
+        </md-content>
+    </div>
