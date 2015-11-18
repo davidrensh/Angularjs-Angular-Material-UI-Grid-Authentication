@@ -55,87 +55,91 @@
     .config(['$stateProvider', '$urlRouterProvider', '$logProvider', 
     function ($stateProvider, $urlRouterProvider) {
 
-      $urlRouterProvider.otherwise("/login");
+        $urlRouterProvider.otherwise("/login");
 
-      $stateProvider
-        .state('home', {
-          url: '/',
-          views: {
-            '@': {
-              templateUrl: 'home.view.html',
-              controller: 'HomeCtrl as vm'
-            }
-          }
-        })
-        .state('home.gettingstarted', {
-            url: '/',
-            views: {
-                '@': {
-                    templateUrl: 'home.view.html',
-                    controller: 'HomeCtrl as vm'
-                }
-            }
-        })
-        .state("login", {
-            url: '/login',
-            templateUrl: "login.html",
-            controller: 'authCtrl',
-            authenticate: false
-        })
-        .state('home.main', {
-          url: 'main',
-          abstract: true
-        })
-        .state('home.main.ipas', {
-          url: '/ipas',
+        $stateProvider
+          .state('home', {
+              url: '/',
+            authenticate: true,
+              views: {
+                  '@': {
+                      templateUrl: 'home.view.html',
+                      controller: 'HomeCtrl as vm'
+                  }
+              }
+          })
+          .state('home.gettingstarted', {
+              url: '/',
+              authenticate: true,
+              views: {
+                  '@': {
+                      templateUrl: 'home.view.html',
+                      controller: 'HomeCtrl as vm'
+                  }
+              }
+          })
+          .state("login", {
+              url: '/login',
+              templateUrl: "login.html",
+              controller: 'authCtrl',
+              authenticate: false
+          })
+          .state('home.main', {
+              url: 'main',
+              abstract: true,
+              authenticate: true
+          })
+          .state('home.main.ipas', {
+              url: '/ipas',
+              authenticate: true,
+              views: {
 
-          views: {
+                  'content@home': {
+                      templateUrl: 'beers.ipa.view.html'
+                  }
+              }
+          })
+                    .state('home.main.scorecard', {
+                        url: '/scorecard',
+                        //authenticate: true,
+                        views: {
 
-            'content@home': {
-              templateUrl: 'beers.ipa.view.html'
-            }
-          }
-        })
-                  .state('home.main.scorecard', {
-                      url: '/scorecard',
+                            'content@home': {
+                                templateUrl: 'scorecard.html'
+                            }
+                        }
+                    })
+                    .state('home.main.outofscope', {
+                        url: '/outofscope',
+                        authenticate: true,
+                        views: {
 
-                      views: {
+                            'content@home': {
+                                templateUrl: 'outofscope.html'
+                            }
+                        }
+                    })
+          .state('home.main.porters', {
+              url: '/porters',
+              authenticate: true,
+              views: {
 
-                          'content@home': {
-                              templateUrl: 'scorecard.html'
-                          }
-                      }
-                  })
-                  .state('home.main.outofscope', {
-                      url: '/outofscope',
+                  'content@home': {
+                      templateUrl: 'beers.porters.view.html'
+                  }
+              }
+          })
+           .state('home.main.wheat', {
+               url: '/wheat',
+               authenticate: true,
+               views: {
 
-                      views: {
-
-                          'content@home': {
-                              templateUrl: 'outofscope.html'
-                          }
-                      }
-                  })
-        .state('home.main.porters', {
-          url: '/porters',
-
-          views: {
-
-            'content@home': {
-              templateUrl: 'beers.porters.view.html'
-            }
-          }
-        })
-         .state('home.main.wheat', {
-          url: '/wheat',
-
-          views: {
-
-            'content@home': {
-              templateUrl: 'beers.wheat.view.html'
-            }
-          }
-        })
+                   'content@home': {
+                       templateUrl: 'beers.wheat.view.html'
+                   }
+               }
+           }
+          )
     }])
     //take all whitespace out of string
     .filter('nospace', function () {

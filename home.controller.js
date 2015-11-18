@@ -11,11 +11,9 @@
         'menu', '$interval', 'uiGridConstants', 'uiGridGroupingConstants',
         function ($rootScope, $scope,$http, $log, $state, $timeout, $mdBottomSheet, $mdSidenav, $mdDialog, $location, menu, $interval, uiGridConstants, uiGridGroupingConstants) {
             this.userProject = '';
-            this.projects = ('3215365 3215367 3615377 ' +
-                'WY').split(' ').map(function (project) { return { abbrev: project }; });
+            this.projects = ('3215365 3215367 3615377').split(' ').map(function (project) { return { abbrev: project }; });
             this.userScorecard = '';
-            this.scorecards = ('Piping Concrete Grouting ' +
-                'WY').split(' ').map(function (scorecard) { return { abbrev: scorecard }; });
+            this.scorecards = ('').split(' ').map(function (scorecard) { return { abbrev: scorecard }; });
 
             var vm = this;
             var aboutMeArr = ['Family', 'Location', 'Lifestyle'];
@@ -34,12 +32,34 @@
             $scope.showSearch = false;
             $scope.showtop = true;
             $scope.username = $rootScope.username;
+            $scope.myDateStart = null;
+            $scope.myDateEnd = null;
+
+            $scope.startDateChange = function (startdate) {
+                var d = new Date();
+                $scope.myDateEnd = new Date(d.setDate(startdate.getDate() + 6));
+            };
+
+            $scope.projectChange = function (project) {
+                vm.scorecards = ('Piping Concrete Grouting').split(' ').map(function (scorecard) { return { abbrev: scorecard }; });
+            };
+
+            $scope.logout = function () {
+                $rootScope.isAuthenticated = false;
+                $location.path('/login');
+            };
+
             $scope.toggleSearch = function (element) {
                 $scope.showSearch = !$scope.showSearch;
             };
-            //$rootScope.toggleNav = function () {
-            //    //$mdSidenav('left').toggle();
-            //};
+            
+            $scope.init = function () {
+                angular.forEach(vm.menu.sections, function (value, key) {
+                    toggleSection(value);
+                });
+                
+            };
+
             $scope.toggle = function () {
 
                 $mdSidenav('left').toggle().then(function(){
@@ -92,13 +112,30 @@
             };
 
             function isOpen(section) {
-                return menu.isSectionSelected(section);
+                return section.open;
+                //return menu.isSectionSelected(section);
+            }
+            function isOpenX(section) {
+                return section.open;
             }
 
             function toggleOpen(section) {
                 menu.toggleSelectSection(section);
             }
 
+            function toggleSection(section) {
+                menu.toggleSection(section);
+            }
+
+            $scope.onlyWeekendsSunPredicate = function (date) {
+                var day = date.getDay();
+                return day === 0;
+            };
+
+            $scope.onlyWeekendsSatPredicate = function (date) {
+                var day = date.getDay();
+                return day === 6;
+            };
             //grid start
 
             $scope.gridOptions = {};
@@ -117,7 +154,8 @@
                 return row.id;
             };
 
-            $scope.gridOptions.columnDefs = [
+            $scope.gridOptions.columnDefs = //[];
+                [
               { name: 'id', width: 50 },
               { name: 'name', width: 100 },
               { name: 'age', width: 100, enableCellEdit: true, aggregationType: uiGridConstants.aggregationTypes.avg, treeAggregationType: uiGridGroupingConstants.aggregation.AVG },
@@ -162,7 +200,7 @@
                       .error(function () {
                           $scope.callsPending--
                       });
-                }, 200, 10);
+                }, 200, 20);
 
 
                 var timeout = $timeout(function () {
@@ -176,8 +214,60 @@
                 });
 
             };
-            //grid end
+            $scope.scorecardChange = function (project, scorecard) {
+                //$location.path('/scorecard');
+                $scope.myData = [];
+                var noColumns = true;
+                var start = new Date();
+                var sec = $interval(function () {
+                    $scope.callsPending++;
 
+                    $http.get('https://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/data/500_complex.json')
+                      .success(function (data) {
+                          if (noColumns || $scope.gridOptions.columnDefs.count < 1) {
+                              $scope.gridOptions.columnDefs = getColumnDefs(data[0]);
+                              if (!$state.is('home.main.scorecard'))
+                                  $state.go('home.main.scorecard');
+                              noColumns = false;
+                          }
+                          $scope.callsPending--;
+
+                          data.forEach(function (row) {
+                              row.id = i;
+                              i++;
+                              row.registered = new Date(row.registered)
+                              $scope.myData.push(row);
+                          });
+                      })
+                      .error(function () {
+                          $scope.callsPending--
+                      });
+                }, 200, 20);
+
+                var timeout = $timeout(function () {
+                    $interval.cancel(sec);
+                    $scope.left = '';
+                }, 2000);
+
+                $scope.$on('$destroy', function () {
+                    $timeout.cancel(timeout);
+                    $interval.cancel(sec);
+                });
+
+
+
+            };
+            //grid end
+            function getColumnDefs(row) {
+                var columnDefs = new Array();
+                angular.forEach(row, function (value, key) {
+                    columnDefs.push({
+                        field: key,
+                        displayName: key
+                    });
+                });
+                return columnDefs;
+            };
         }]);
 })();
 angular.module('myMenuApp.controllers').controller('SearchCtrl', SearchCtrlFn)

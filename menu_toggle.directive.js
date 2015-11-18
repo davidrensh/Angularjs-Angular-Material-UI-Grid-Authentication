@@ -29,8 +29,12 @@
           scope.isOpen = function () {
             return controller.isOpen(scope.section);
           };
+          //scope.isOpenX = function (val) {
+          //    return controller.isOpenX(scope.section); 
+          //};
+
           scope.toggle = function () {
-            controller.toggleOpen(scope.section);
+           return  controller.toggleOpen(scope.section);
           };
           
           var parentNode = element[0].parentNode.parentNode.parentNode;

@@ -5,23 +5,35 @@
     <div ng-hide="!showtop"  >
         <md-toolbar class="animate-show md-hue-1 md-whiteframe-z1" ng-show="!showSearch">
             <div class="md-toolbar-tools">
-                <md-button class="md-icon-button" ng-click="toggleLeft()" aria-label="Menu">
-                    <md-icon aria-label="Menu"></md-icon>
-                </md-button>
-                <h3>
-                    &nbsp;&nbsp;Forman Studio
-                </h3>
-                <span flex></span>
-                <md-button class="md-icon-button" aria-label="Search" ng-click="toggleSearch()">
-                    <md-icon md-svg-icon="action:ic_search_24px" aria-label="Search"></md-icon>
-                </md-button>
-                <md-button class="md-icon-button" aria-label="Open Settings" ng-click="showListBottomSheet($event)">
-                    <md-icon md-svg-icon="navigation:ic_more_vert_24px" aria-label="More"></md-icon>
-                </md-button>
-                <md-button class="md-icon-button" aria-label="Close" ng-click="showtop = !showtop">
-                    <md-icon md-svg-icon="img/close.svg" aria-label="Close"></md-icon>
-                </md-button>
-            </div>
+               
+
+                    <md-button class="md-icon-button" ng-click="toggleLeft()" aria-label="Menu">
+                        <md-icon aria-label="Menu"></md-icon>
+                    </md-button>
+                    <h3>
+                        &nbsp;&nbsp;Forman Studio&nbsp;&nbsp;
+                    </h3>
+
+                        <label class="md-subhead">Start Date:</label>
+                        <md-datepicker ng-model="myDateStart" md-placeholder="Enter date"
+                                   md-date-filter="onlyWeekendsSunPredicate"  ng-change="startDateChange(myDateStart)"></md-datepicker>
+                        <label class="md-subhead">End Date:</label>
+                        <md-datepicker ng-model="myDateEnd" md-date-filter="onlyWeekendsSatPredicate" disabled></md-datepicker>
+                        <md-button  id="saveWeek" class="md-raised" ng-click="refreshData()">Save Week</md-button>
+                        <md-button  id="refreshButton" class="md-raised" ng-click="refreshData()">Refresh Data</md-button><span class="md-subhead">&nbsp;{{ myData.length }} rows.</span>  <span class="md-subhead"> &nbsp;Calls Pending:</span> <span class="md-subhead" ng-bind="callsPending"></span>
+
+                    <span flex></span>
+                    <md-button class="md-icon-button" aria-label="Search" ng-click="toggleSearch()">
+                        <md-icon md-svg-icon="action:ic_search_24px" aria-label="Search"></md-icon>
+                    </md-button>
+                    <md-button class="md-icon-button" aria-label="Open Settings" ng-click="showListBottomSheet($event)">
+                        <md-icon md-svg-icon="navigation:ic_more_vert_24px" aria-label="More"></md-icon>
+                    </md-button>
+                    <md-button class="md-icon-button" aria-label="Close" ng-click="showtop = !showtop">
+                        <md-icon md-svg-icon="img/close.svg" aria-label="Close"></md-icon>
+                    </md-button>
+
+</div>
         </md-toolbar>
         <md-toolbar ng-show="showSearch" class="animate-show md-hue-1 md-whiteframe-z1">
             <div class="md-toolbar-tools">
@@ -59,14 +71,8 @@
         </md-toolbar>
     </div>
     <md-content layout-fill  >
-        <div layout="column">
-            <div>
-                <button id="refreshButton" type="button" class="btn btn-success" ng-click="refreshData()">Refresh Data</button>  <strong>Calls Pending:</strong> <span ng-bind="callsPending"></span>
-                <br>
-                <br>
-                <strong>{{ myData.length }} rows</strong>
-            </div>
-            <div id="grid1" ui-grid="gridOptions" ui-grid-cellNav ui-grid-edit ui-grid-resize-columns ui-grid-pinning ui-grid-selection ui-grid-move-columns ui-grid-importer ui-grid-exporter ui-grid-grouping class="grid"></div>
+        <div layout="column" layout-fill >
+            <div layout-fill id="grid1" ui-grid="gridOptions" ui-grid-cellNav ui-grid-edit ui-grid-resize-columns ui-grid-pinning ui-grid-selection ui-grid-move-columns ui-grid-importer ui-grid-exporter ui-grid-grouping ui-grid-auto-resize class="grid"></div>
         </div>
     </md-content>
 </div>

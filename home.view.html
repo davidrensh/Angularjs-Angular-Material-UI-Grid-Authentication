@@ -1,4 +1,4 @@
-    <div layout="row" layout-fill>
+    <div layout="row" layout-fill ng-init="init()">
         <md-button class="md-fab md-fab-bottom-right" aria-label="Add" ng-click="showAdd($event)">
             <md-icon md-svg-icon="content:ic_add_24px" aria-label="Plus"></md-icon>
         </md-button>
@@ -19,10 +19,10 @@
 
                 </div>
             </md-toolbar>
-            <md-content role="navigation">
+
                 <md-input-container>
                     <label>Project</label>
-                    <md-select ng-model="userProject">
+                    <md-select ng-model="userProject" ng-change="projectChange(userProject)">
                         <md-option ng-repeat="p in vm.projects" value="{{p.abbrev}}">
                             {{p.abbrev}}
                         </md-option>
@@ -31,14 +31,13 @@
 
                 <md-input-container>
                     <label>Scorecard</label>
-                    <md-select ng-model="userScorecard">
+                    <md-select ng-model="userScorecard"  ng-change="scorecardChange(userProject,userScorecard)">
                         <md-option ng-repeat="p in vm.scorecards" value="{{p.abbrev}}">
                             {{p.abbrev}}
                         </md-option>
                     </md-select>
                 </md-input-container>
 
-            </md-content>
             <md-content role="navigation">
                 <h5></h5>
                 <ul class="side-menu">
@@ -52,6 +51,12 @@
                         <menu-toggle section="section" ng-if="section.type === 'toggle'"></menu-toggle>
                     </li>
                 </ul>
+            </md-content>
+            <md-content role="navigation">
+                <md-divider ng-style="{'background': 'rgba(255, 102, 51, 0.7)'}"></md-divider>
+                <div class="md-actions" layout="row" layout-align="center end">
+                    <md-button class="md-primary md-raised " type="button" ng-click="logout()">Sign out</md-button>
+                </div>
             </md-content>
         </md-sidenav>
 

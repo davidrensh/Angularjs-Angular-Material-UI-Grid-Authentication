@@ -2,37 +2,43 @@
 <html ng-app="myMenuApp">
 
   <head>
+
     <script data-require="lodash.js@3.5.0" data-semver="3.5.0" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.js"></script>
-    <link data-require="angular-material@0.11.4" data-semver="0.11.4" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.11.4/angular-material.min.css" />
-    <link data-require="font-awesome@4.3.0" data-semver="4.3.0" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="style.css" />
-  </head>
 
-  <body>
-    <div ui-view layout layout-fill></div>
-    <script data-require="angular.js@~1.4.7" data-semver="1.4.7" src="https://code.angularjs.org/1.4.7/angular.js"></script>
-    <script data-require="angular-animate@1.4.7" data-semver="1.4.7" src="https://code.angularjs.org/1.4.7/angular-animate.js"></script>
-    <script data-require="angular-aria@1.4.7" data-semver="1.4.7" src="https://code.angularjs.org/1.4.7/angular-aria.js"></script>
-      <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular-resource.js'></script>
+      <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js'></script>
+      <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.min.js'></script>
+      <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-route.min.js'></script>
+      <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-aria.min.js'></script>
+      <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-messages.min.js'></script>
+      <script src='https://cdn.gitcdn.xyz/cdn/angular/bower-material/v1.0.0-rc4/angular-material.js'></script>
+      <script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/assets-cache.js'></script>
 
-
-    <script data-require="angular-material@0.11.4" data-semver="0.11.4" src="https://ajax.googleapis.com/ajax/libs/angular_material/0.11.4/angular-material.min.js"></script>
-    <script data-require="ui-router@0.2.12" data-semver="0.2.15" src="//rawgit.com/angular-ui/ui-router/0.2.15/release/angular-ui-router.js"></script>
+      <script data-require="ui-router@0.2.12" data-semver="0.2.15" src="//rawgit.com/angular-ui/ui-router/0.2.15/release/angular-ui-router.js"></script>
+      <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-resource.js'></script>
 
       <script src="http://ui-grid.info/docs/grunt-scripts/csv.js"></script>
       <script src="http://ui-grid.info/docs/grunt-scripts/pdfmake.js"></script>
       <script src="http://ui-grid.info/docs/grunt-scripts/vfs_fonts.js"></script>
       <script src="http://ui-grid.info/release/ui-grid.js"></script>
-      <link rel="stylesheet" href="http://ui-grid.info/release/ui-grid.css" type="text/css">
 
-    <!--my scripts-->
-    <script src="app.modules.js"></script>
-    <script src="menu.service.js"></script>
+    <link data-require="angular-material@0.11.4" data-semver="0.11.4" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.11.4/angular-material.min.css" />
+    <link data-require="font-awesome@4.3.0" data-semver="4.3.0" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+      <link rel="stylesheet" href="http://ui-grid.info/release/ui-grid.css" type="text/css">
+    <link rel="stylesheet" href="style.css" />
+
+      <!--my scripts-->
+      <script src="app.modules.js"></script>
+      <script src="menu.service.js"></script>
       <script src="home.controller.js"></script>
       <script src="auth.controller.js"></script>
-    <script src="menu_toggle.directive.js"></script>
-    <script src="menulink.directive.js"></script>
-    <script src="app.routes.js"></script>
-  </body>
+      <script src="menu_toggle.directive.js"></script>
+      <script src="menulink.directive.js"></script>
+      <script src="app.routes.js"></script>
+  </head>
+
+  <body>
+    <div ui-view layout layout-fill></div>
+
+</body>
 
 </html>

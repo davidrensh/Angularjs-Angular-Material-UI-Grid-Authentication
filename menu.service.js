@@ -11,29 +11,30 @@
           var sections = [{
               name: 'Forman Work',
               type: 'toggle',
+              open: true,
               pages: [{
                   name: 'Scorecard',
                   type: 'link',
                   state: 'home.main.scorecard',
-                  icon: 'fa fa-group'
+                  icon: 'fa fa-pencil-square-o'
               }, {
                   name: 'ImportMC2',
                   state: 'home.main.porters',
                   type: 'link',
-                  icon: 'fa fa-map-marker'
+                  icon: 'fa fa-plus'
               },
                 {
                     name: 'WeeklyProgress',
                     state: 'home.main.wheat',
                     type: 'link',
-                    icon: 'fa fa-plus'
+                    icon: 'fa fa-calendar'
                 }
                 ,
                 {
                     name: 'OutOfScope',
                     state: 'home.main.outofscope',
                     type: 'link',
-                    icon: 'fa fa-plus'
+                    icon: 'fa fa-undo'
                 }
               ]
           }];
@@ -41,34 +42,35 @@
         sections.push({
           name: 'Management',
           type: 'toggle',
+          open: true,
           pages: [{
               name: 'Project Setting',
             type: 'link',
             state: 'munchies.cheetos',
-            icon: 'fa fa-group'
+            icon: 'fa fa-cog'
           }, {
               name: 'General Setting',
             state: 'munchies.bananachips',
             type: 'link',
-            icon: 'fa fa-map-marker'
+            icon: 'fa fa-cogs'
           },
             {
                 name: 'Tools',
               state: 'munchies.donuts',
               type: 'link',
-              icon: 'fa fa-map-marker'
+              icon: 'fa fa-wrench'
             },
             {
                 name: 'Reports',
                 state: 'munchies.donuts',
                 type: 'link',
-                icon: 'fa fa-map-marker'
+                icon: 'fa fa-newspaper-o'
             },
             {
                 name: 'History',
                 state: 'munchies.donuts',
                 type: 'link',
-                icon: 'fa fa-map-marker'
+                icon: 'fa fa-history'
             }
           ]
         });
@@ -79,7 +81,15 @@
           sections: sections,
 
           toggleSelectSection: function (section) {
-            self.openedSection = (self.openedSection === section ? null : section);
+              section.open = !section.open;
+              self.openedSection = (self.openedSection === section ? null : section);
+              
+          },
+
+          toggleSection: function (section) {
+              if (section.open == null) section.open = true;
+              self.openedSection = (self.openedSection === section ? null : section);
+              
           },
           isSectionSelected: function (section) {
             return self.openedSection === section;
