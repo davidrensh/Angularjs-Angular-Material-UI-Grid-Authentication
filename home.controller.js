@@ -16,10 +16,10 @@
             this.scorecards = ('').split(' ').map(function (scorecard) { return { abbrev: scorecard }; });
 
             var vm = this;
-            var aboutMeArr = ['Family', 'Location', 'Lifestyle'];
-            var budgetArr = ['Housing', 'LivingExpenses', 'Healthcare', 'Travel'];
-            var incomeArr = ['SocialSecurity', 'Savings', 'Pension', 'PartTimeJob'];
-            var advancedArr = ['Assumptions', 'BudgetGraph', 'AccountBalanceGraph', 'IncomeBalanceGraph'];
+            //var aboutMeArr = ['Family', 'Location', 'Lifestyle'];
+            //var budgetArr = ['Housing', 'LivingExpenses', 'Healthcare', 'Travel'];
+            //var incomeArr = ['SocialSecurity', 'Savings', 'Pension', 'PartTimeJob'];
+            //var advancedArr = ['Assumptions', 'BudgetGraph', 'AccountBalanceGraph', 'IncomeBalanceGraph'];
 
             //functions for menu-link and menu-toggle
             vm.isOpen = isOpen;
