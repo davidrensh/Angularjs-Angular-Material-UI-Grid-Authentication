@@ -11,7 +11,7 @@
     'ngMaterial',
     'ngAria',
 
-  ]).constant("authUrl", "http://localhost:41439/api/users")
+  ]).constant("apiUrl", "http://localhost:41439/api/")
     .config(function ($httpProvider) {
         //Enable cross domain calls
         $httpProvider.defaults.useXDomain = true;

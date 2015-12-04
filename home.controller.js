@@ -4,22 +4,28 @@
     angular.module('myMenuApp.controllers')
 
   .controller('HomeCtrl', [
-        '$rootScope','$scope','$http',
+        '$rootScope','$scope','$http','$q',
         '$log',
         '$state',
         '$timeout', '$mdBottomSheet', '$mdSidenav', '$mdDialog', '$location',
-        'menu', '$interval', 'uiGridConstants', 'uiGridGroupingConstants',
-        function ($rootScope, $scope,$http, $log, $state, $timeout, $mdBottomSheet, $mdSidenav, $mdDialog, $location, menu, $interval, uiGridConstants, uiGridGroupingConstants) {
+        'menu', '$interval', 'uiGridConstants', 'uiGridGroupingConstants','apiUrl',
+        function ($rootScope, $scope, $http, $q, $log, $state, $timeout, $mdBottomSheet, $mdSidenav, $mdDialog, $location, menu, $interval, uiGridConstants, uiGridGroupingConstants, apiUrl) {
             this.userProject = '';
-            this.projects = ('3215365 3215367 3615377').split(' ').map(function (project) { return { abbrev: project }; });
-            this.userScorecard = '';
-            this.scorecards = ('').split(' ').map(function (scorecard) { return { abbrev: scorecard }; });
-
             var vm = this;
-            //var aboutMeArr = ['Family', 'Location', 'Lifestyle'];
-            //var budgetArr = ['Housing', 'LivingExpenses', 'Healthcare', 'Travel'];
-            //var incomeArr = ['SocialSecurity', 'Savings', 'Pension', 'PartTimeJob'];
-            //var advancedArr = ['Assumptions', 'BudgetGraph', 'AccountBalanceGraph', 'IncomeBalanceGraph'];
+            this.userScorecard = '';
+            this.projects = ('3215365 3215367 3615377').split(' ').map(function (project) { return { abbrev: project }; });// [];// GetProjects($rootScope.userid, $rootScope);//
+            this.scorecards = [];// ('').split(' ').map(function (scorecard) { return { abbrev: scorecard }; });
+
+            angular.element(document).ready(function () {
+                $http.post(apiUrl + 'Projects/GetProjectListByUserId', $rootScope.userid, {
+                    withCredentials: false
+                }).success(function (data) {
+                    $scope.vm.projects = data.map(function (project) { return { abbrev: project.ProjectNumber }; });// data;
+                }).error(function (error) {
+                    $scope.vm.projects = [];
+                });
+                 console.log('project loading completed');
+           });
 
             //functions for menu-link and menu-toggle
             vm.isOpen = isOpen;
@@ -41,7 +47,15 @@
             };
 
             $scope.projectChange = function (project) {
-                vm.scorecards = ('Piping Concrete Grouting').split(' ').map(function (scorecard) { return { abbrev: scorecard }; });
+                $http.post(apiUrl + 'ProjectScoreCards/GetScorecardsListByProjectIdAndUserID', { p1: project, userid: $rootScope.userid }, {
+                    withCredentials: false
+                }).success(function (data) {
+                    $scope.vm.scorecards = data.map(function (s) { return { abbrev: s.ScoreCardName }; });// data;
+                }).error(function (error) {
+                    $scope.vm.scorecards = [];
+                });
+                console.log('scorecards loading completed');
+                //vm.scorecards = ('Piping Concrete Grouting').split(' ').map(function (scorecard) { return { abbrev: scorecard }; });
             };
 
             $scope.logout = function () {
@@ -57,7 +71,7 @@
                 angular.forEach(vm.menu.sections, function (value, key) {
                     toggleSection(value);
                 });
-                
+                //vm.projects = GetProjects($rootScope.userid);
             };
 
             $scope.toggle = function () {
@@ -111,6 +125,15 @@
                 isFirstDisabled: false
             };
 
+            function GetProjects(userid) {
+                    $http.post(apiUrl + 'Projects/GetProjectListByUserId', userid, {
+                        withCredentials: false
+                    }).success(function (data) {
+                        return data;
+                    }).error(function (error) {
+                        return null;
+                    });
+            }
             function isOpen(section) {
                 return section.open;
                 //return menu.isSectionSelected(section);
@@ -146,6 +169,22 @@
             $scope.gridOptions.showGridFooter = true;
             $scope.gridOptions.showColumnFooter = true;
             $scope.gridOptions.fastWatch = true;
+            $scope.saveRow = function (rowEntity) {
+                var promise = $q.defer();
+                $http.put(apiUrl + 'Scopes/PutScope', rowEntity).success(function () {
+                    //$interval(function () {
+                        promise.resolved();
+                    //}, 3000, 1)
+                }).error(promise.reject);
+
+                $scope.gridApi.rowEdit.setSavePromise(rowEntity, promise.promise);
+
+            };
+            $scope.gridOptions.onRegisterApi = function (gridApi) {
+                //set gridApi on scope
+                $scope.gridApi = gridApi;
+                gridApi.rowEdit.on.saveRow($scope, $scope.saveRow);
+            };
 
             $scope.gridOptions.rowIdentity = function (row) {
                 return row.id;
@@ -154,108 +193,17 @@
                 return row.id;
             };
 
-            $scope.gridOptions.columnDefs = //[];
-                [
-              { name: 'id', width: 50 },
-              { name: 'name', width: 100 },
-              { name: 'age', width: 100, enableCellEdit: true, aggregationType: uiGridConstants.aggregationTypes.avg, treeAggregationType: uiGridGroupingConstants.aggregation.AVG },
-              { name: 'address.street', width: 150, enableCellEdit: true },
-              { name: 'address.city', width: 150, enableCellEdit: true },
-              { name: 'address.state', width: 50, enableCellEdit: true },
-              { name: 'address.zip', width: 50, enableCellEdit: true },
-              { name: 'company', width: 100, enableCellEdit: true },
-              { name: 'email', width: 100, enableCellEdit: true },
-              { name: 'phone', width: 200, enableCellEdit: true },
-              { name: 'about', width: 300, enableCellEdit: true },
-              { name: 'friends[0].name', displayName: '1st friend', width: 150, enableCellEdit: true },
-              { name: 'friends[1].name', displayName: '2nd friend', width: 150, enableCellEdit: true },
-              { name: 'friends[2].name', displayName: '3rd friend', width: 150, enableCellEdit: true },
-              { name: 'agetemplate', field: 'age', width: 150, cellTemplate: '<div class="ui-grid-cell-contents"><span>Age 2:{{COL_FIELD}}</span></div>' },
-              { name: 'Is Active', field: 'isActive', width: 150, type: 'boolean' },
-              { name: 'Join Date', field: 'registered', cellFilter: 'date', width: 150, type: 'date', enableFiltering: false },
-              { name: 'Month Joined', field: 'registered', cellFilter: 'date:"MMMM"', filterCellFiltered: true, sortCellFiltered: true, width: 150, type: 'date' }
-            ];
+            $scope.gridOptions.columnDefs = [];
 
             $scope.callsPending = 0;
 
             var i = 0;
             $scope.refreshData = function () {
-                $scope.myData = [];
+                LoadData($scope.userProject, $scope.userScorecard);
+            }
 
-                var start = new Date();
-                var sec = $interval(function () {
-                    $scope.callsPending++;
-
-                    $http.get('https://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/data/500_complex.json')
-                      .success(function (data) {
-                          $scope.callsPending--;
-
-                          data.forEach(function (row) {
-                              row.id = i;
-                              i++;
-                              row.registered = new Date(row.registered)
-                              $scope.myData.push(row);
-                          });
-                      })
-                      .error(function () {
-                          $scope.callsPending--
-                      });
-                }, 200, 20);
-
-
-                var timeout = $timeout(function () {
-                    $interval.cancel(sec);
-                    $scope.left = '';
-                }, 2000);
-
-                $scope.$on('$destroy', function () {
-                    $timeout.cancel(timeout);
-                    $interval.cancel(sec);
-                });
-
-            };
             $scope.scorecardChange = function (project, scorecard) {
-                //$location.path('/scorecard');
-                $scope.myData = [];
-                var noColumns = true;
-                var start = new Date();
-                var sec = $interval(function () {
-                    $scope.callsPending++;
-
-                    $http.get('https://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/data/500_complex.json')
-                      .success(function (data) {
-                          if (noColumns || $scope.gridOptions.columnDefs.count < 1) {
-                              $scope.gridOptions.columnDefs = getColumnDefs(data[0]);
-                              if (!$state.is('home.main.scorecard'))
-                                  $state.go('home.main.scorecard');
-                              noColumns = false;
-                          }
-                          $scope.callsPending--;
-
-                          data.forEach(function (row) {
-                              row.id = i;
-                              i++;
-                              row.registered = new Date(row.registered)
-                              $scope.myData.push(row);
-                          });
-                      })
-                      .error(function () {
-                          $scope.callsPending--
-                      });
-                }, 200, 20);
-
-                var timeout = $timeout(function () {
-                    $interval.cancel(sec);
-                    $scope.left = '';
-                }, 2000);
-
-                $scope.$on('$destroy', function () {
-                    $timeout.cancel(timeout);
-                    $interval.cancel(sec);
-                });
-
-
-
+                LoadData(project, scorecard);
             };
             //grid end
             function getColumnDefs(row) {
@@ -268,6 +216,79 @@
                 });
                 return columnDefs;
             };
+            function getColumnDefsByData(data) {
+                var ccd = new Array();
+                data.forEach(function (row) {
+                    if (/[a]\d{1,2}/.test( row['field'])) {
+                        ccd.push({
+                            field: row['field'],
+                            displayName: row['displayName'],
+                            enableCellEdit: true,
+                            visible: row['visible'],
+                            editableCellTemplate: '<div><form name="inputForm"><input type="number" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD" min="0" max="100"></form></div>',
+                            cellClass: function (grid, row, col, rowIndex, colIndex) {
+                                var val = grid.getCellValue(row, col);
+                                if (val == 100) {
+                                    return 'green';
+                                }
+                                if (val > 0) {
+                                    return 'yellow';
+                                }
+
+                                return 'pink';
+                            }
+                        });
+                    }
+                    else if (/[d]\d{1,2}/.test(row['field'])) {
+                        ccd.push({
+                            field: row['field'],
+                            displayName: row['displayName'],
+                            enableCellEdit: true,
+                            editableCellTemplate: '<div><form name="inputForm"><input type="text" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD" ng-maxlength="150" ></form></div>',
+                            visible: row['visible']
+                        });
+                    } else {
+                        ccd.push({
+                            field: row['field'],
+                            displayName: row['displayName'],
+                            enableCellEdit: false,
+                            visible: row['visible']
+                        });
+                    }
+                });
+                return ccd;
+            };
+
+            function LoadData(project, scorecard) {
+                if (typeof project === "undefined" || typeof scorecard === "undefined") return;
+                $scope.myData = [];
+                var noColumns = true;
+                var start = new Date();
+                $http.post(apiUrl + 'Scopes/GetScoreCardViewColumnDef', { p1: project, p2: scorecard, userid: $rootScope.userid }, {
+                    withCredentials: false
+                }).success(function (data) {
+                    $scope.gridOptions.columnDefs = getColumnDefsByData(data);
+
+                }).error(function (error) {
+                    $scope.gridOptions.columnDefs = [];
+                });
+
+                $http.post(apiUrl + 'Scopes/GetScorecardView', { p1: project, p2: scorecard, userid: $rootScope.userid }, {
+                    withCredentials: false
+                }).success(function (data) {
+
+                    data.forEach(function (rr) {
+                        rr.id = i;
+                        i++;
+                        rr.registered = new Date(rr.registered)
+                        $scope.myData.push(rr);
+                        $state.go('home.main.scorecard');
+                    });
+                }).error(function (error) {
+                    $scope.myData = [];
+                });
+            };
+
         }]);
 })();
 angular.module('myMenuApp.controllers').controller('SearchCtrl', SearchCtrlFn)

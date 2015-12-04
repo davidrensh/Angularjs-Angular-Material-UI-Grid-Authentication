@@ -26,6 +26,19 @@
 .ui-grid {
 background-color:rgb(250,250,255);
 }
+.grid .ui-grid-row .blue {
+  background-color: lightblue;
+}
+
+.grid .ui-grid-row .pink {
+  background-color: pink;
+}
+.grid .ui-grid-row .green {
+  background-color: forestgreen;
+}
+.grid .ui-grid-row .yellow {
+  background-color: yellow;
+}
 md-datepicker{
     background-color: rgb(238,238,255);
 }

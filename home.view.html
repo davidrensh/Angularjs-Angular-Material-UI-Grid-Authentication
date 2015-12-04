@@ -23,7 +23,7 @@
                 <md-input-container>
                     <label>Project</label>
                     <md-select ng-model="userProject" ng-change="projectChange(userProject)">
-                        <md-option ng-repeat="p in vm.projects" value="{{p.abbrev}}">
+                        <md-option ng-repeat="p in vm.projects"  value="{{p.abbrev}}">
                             {{p.abbrev}}
                         </md-option>
                     </md-select>
